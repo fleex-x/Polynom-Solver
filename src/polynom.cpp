@@ -87,10 +87,10 @@ std::optional<double> Polynom::find_root(double left_bound, double right_bound,
 		return {};
 	}
 	auto binary_search = [](double left_bound, double right_bound,
-	                        std::function<bool(double)> is_root_before) {
+	                        std::function<bool(double)> is_root_after) {
 		for (int i = 0; i < 80; ++i) {
 			double middle = (right_bound + left_bound) / 2.0;
-			if (is_root_before(middle)) {
+			if (is_root_after(middle)) {
 				left_bound = middle;
 			} else {
 				right_bound = middle;
