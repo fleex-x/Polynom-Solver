@@ -5,6 +5,7 @@
 #include <cassert>
 #include <cmath>
 #include <optional>
+#include <functional>
 
 namespace fleex_x_math {
 
@@ -85,29 +86,26 @@ std::optional<double> Polynom::find_root(double left_bound, double right_bound,
 	if (is_negative_value(left_bound) && is_negative_value(right_bound)) {
 		return {};
 	}
-	if (is_increasing_on_segment) {
+	auto binary_search = [](double left_bound, double right_bound,
+	                        std::function<bool(double)> is_root_before) {
 		for (int i = 0; i < 80; ++i) {
 			double middle = (right_bound + left_bound) / 2.0;
-			if (is_negative_value(middle)) {
+			if (is_root_before(middle)) {
 				left_bound = middle;
 			} else {
 				right_bound = middle;
 			}
 		}
-	} else {
-		for (int i = 0; i < 80; ++i) {
-			double middle = (right_bound + left_bound) / 2.0;
-			if (is_positive_value(middle)) {
-				left_bound = middle;
-			} else {
-				right_bound = middle;
-			}
-		}
-	}
-	if (is_root(left_bound)) {
 		return left_bound;
+	};
+	if (is_increasing_on_segment) {
+		return binary_search(left_bound, right_bound, [this](double x){
+			return is_negative_value(x);
+		});
 	} else {
-		return {};
+		return binary_search(left_bound, right_bound, [this](double x){
+			return is_positive_value(x);
+		});
 	}
 }
 
