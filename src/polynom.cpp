@@ -38,7 +38,7 @@ std::size_t Polynom::degree() const {
 
 double Polynom::value(double x) const {
 	double result = 0, x_pow = 1;
-	for (auto coefficient : coefficients) {
+	for (double coefficient : coefficients) {
 		result += coefficient * x_pow;
 		x_pow *= x;
 	}
@@ -122,7 +122,7 @@ std::vector<double> Polynom::get_roots() const {
 	auto add_root = [this, &roots, &derivative](double left_bound, double right_bound) {
 		double middle = (left_bound + right_bound) / 2.0;
 		std::optional<double> root = find_root(left_bound, right_bound, derivative.is_positive_value(middle));
-		if (root.has_value() && (roots.empty() || std::fabs(root.value() - roots.back())) > EPS) {
+		if (root.has_value() && (roots.empty() || std::fabs(root.value() - roots.back()) > EPS)) {
 			roots.push_back(root.value());
 		}
 	};
